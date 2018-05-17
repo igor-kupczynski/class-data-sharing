@@ -2,5 +2,14 @@ FROM docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.4
 
 COPY pkg/ /app/pkg
 
-RUN yum -y localinstall /app/pkg/jdk-10.0.1_linux-x64_bin.rpm
-ENV JAVA_HOME /usr/java/jdk-10.0.1
+RUN cd /app/pkg && \
+    tar -zxf openjdk-10.0.1_linux-x64_bin.tar.gz && \
+    mkdir -p /opt/java && \
+    mv jdk-10.0.1 /opt/java
+
+ENV JAVA_HOME /opt/java/jdk-10.0.1
+
+RUN mkdir -p /app/cache && \
+    touch /app/cache/elasticsearch_appcds.cls && \
+    touch /app/cache/elasticsearch_appcds.jsa && \
+    chown -R 1000:1000 /app/cache

@@ -1,2 +1,2 @@
 .DS_Store
-elasticsearch-docker/pkg/*.rpm
+elasticsearch-docker/pkg/*

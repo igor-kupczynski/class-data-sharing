@@ -27,6 +27,18 @@ Timing the wait on elastic
 foo
   #+END_SRC
 
+**** Time to load the class
+
+#+BEGIN_SRC sh
+$ docker run --rm -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" --env ES_JAVA_OPTS="-Xlog:class+load:file=clstrace.log" -it "igor-kupczynski/elasticsearch-oss:6.2.4-jdk10"
+
+
+# then in a different tab
+
+$ docker exec -it infallible_mirzakhani bash
+# grep org.elasticsearch.bootstrap.Elasticsearch clstrace.log*
+clstrace.log:[0.381s][info][class,load] org.elasticsearch.bootstrap.Elasticsearch source: file:/usr/share/elasticsearch/lib/elasticsearch-6.2.4.jar
+#+END_SRC
 
 *** [ ] Establish memory usage
 

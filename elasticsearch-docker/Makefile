@@ -18,3 +18,10 @@ build: pkg
 .PHONY: run
 run:
 	docker run --rm -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -it "igor-kupczynski/elasticsearch-oss:6.2.4-jdk10"
+
+.PHONY: time
+time:
+	@ docker run -d --name "foo" --rm -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" -it "igor-kupczynski/elasticsearch-oss:6.2.4-jdk10"
+	@ echo "Timing the wait on elastic"
+	@ time bin/wait-on-elastic
+	@ docker rm -f foo

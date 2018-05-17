@@ -1,0 +1,32 @@
+#+TITLE: README
+
+* Tasks
+** TODO Baseline
+*** [X] Establish time to load
+**** Unscientific baseline
+
+- Time to serve the request
+- Via a shell script =make time=
+- On local laptop
+  
+  #+BEGIN_SRC sh
+$ make time
+2274be994b13eb141ad160b7d7229252adb6f6b9acad0657008f7b1dea6696f4
+Timing the wait on elastic
+......        6.47 real         0.05 user         0.06 sys
+foo
+$ make time
+879eadf4fbea38e0404a2959591369789ae61b4c67acbd440aced14670795f2b
+Timing the wait on elastic
+.......        7.42 real         0.06 user         0.07 sys
+foo
+$ make time
+2c9d1120652874111aa1a524a70610a099240de8ded1b1d62d2c03f2484d81f9
+Timing the wait on elastic
+.......        7.42 real         0.06 user         0.07 sys
+foo
+  #+END_SRC
+
+
+*** [ ] Establish memory usage
+

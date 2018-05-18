@@ -1,0 +1,994 @@
+We've hit a weird JDK error, when dumping the classes to cache. Stripping the list down to first 6218 classes is a workaround. Investigation pending.
+
+** Console output
+
+#+BEGIN_SRC text
+$ make dump-class-cache
+OpenJDK 64-Bit Server VM warning: Option UseConcMarkSweepGC was deprecated in version 9.0 and will likely be removed in a future release.
+narrow_klass_base = 0x0000000800000000, narrow_klass_shift = 3
+Allocated temporary class space: 1073741824 bytes at 0x00000008c0000000
+Allocated shared space: 3221225472 bytes at 0x0000000800000000
+Loading classes to share ...
+Preload Warning: Cannot find com/sun/proxy/$Proxy1
+Preload Warning: Cannot find com/sun/proxy/$Proxy2
+Preload Warning: Cannot find com/sun/proxy/$Proxy3
+Preload Warning: Cannot find com/sun/proxy/$Proxy6
+Preload Warning: Cannot find com/sun/proxy/$Proxy7
+Preload Warning: Cannot find com/sun/proxy/$Proxy8
+Preload Warning: Cannot find com/sun/proxy/$Proxy9
+Preload Warning: Cannot find com/sun/proxy/$Proxy10
+Preload Warning: Verification failed for org.apache.logging.log4j.core.async.AsyncLoggerContext
+Preload Warning: Cannot find com/sun/proxy/$Proxy11
+Preload Warning: Cannot find com/sun/proxy/$Proxy12
+Preload Warning: Cannot find com/sun/proxy/$Proxy13
+Preload Warning: Cannot find com/sun/proxy/$Proxy14
+Preload Warning: Cannot find org/elasticsearch/bootstrap/$Proxy15
+Preload Warning: Cannot find com/sun/proxy/$Proxy19
+Preload Warning: Cannot find com/sun/proxy/$Proxy20
+Preload Warning: Cannot find com/sun/proxy/$Proxy22
+Preload Warning: Cannot find com/sun/proxy/$Proxy23
+Loading classes to share: done.
+Rewriting and linking classes ...
+Preload Warning: Removed error class: org.apache.logging.log4j.core.async.AsyncLoggerContext
+Rewriting and linking classes: done
+Number of classes 8037
+    instance classes   =  7913
+    obj array classes  =   116
+    type array classes =     8
+Updating ConstMethods ... done.
+Removing unshareable information ... done.
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  Internal Error (vmThread.cpp:649), pid=1, tid=118
+#  fatal error: Nested VM operation CollectForMetadataAllocation requested by operation PopulateDumpSharedSpace
+#
+# JRE version: OpenJDK Runtime Environment (10.0.1+10) (build 10.0.1+10)
+# Java VM: OpenJDK 64-Bit Server VM (10.0.1+10, interpreted mode, tiered, compressed oops, concurrent mark sweep gc, linux-amd64)
+# Core dump will be written. Default location: Core dumps may be processed with "/usr/share/apport/apport %p %s %c %d %P" (or dumping to /usr/share/elasticsearch/core.1)
+#
+# An error report file with more information is saved as:
+# /usr/share/elasticsearch/hs_err_pid1.log
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+#
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+
+[error occurred during error reporting (), id 0xe0000000]
+
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+[Too many errors, abort]
+make: *** [cache/elasticsearch_appcds.jsa] Error 139
+#+END_SRC
+
+
+** hs_err_pid1.log
+
+#+BEGIN_SRC text
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  Internal Error (vmThread.cpp:649), pid=1, tid=118
+#  fatal error: Nested VM operation CollectForMetadataAllocation requested by operation PopulateDumpSharedSpace
+#
+# JRE version: OpenJDK Runtime Environment (10.0.1+10) (build 10.0.1+10)
+# Java VM: OpenJDK 64-Bit Server VM (10.0.1+10, interpreted mode, tiered, compressed oops, concurrent mark sweep gc, linux-amd64)
+# Core dump will be written. Default location: Core dumps may be processed with "/usr/share/apport/apport %p %s %c %d %P" (or dumping to /usr/share/elasticsearch/core.1)
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -Xms1g -Xmx1g -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -XX:+AlwaysPreTouch -Xss1m -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Djna.nosys=true -XX:-OmitStackTraceInFastThrow -Dio.netty.noUnsafe=true -Dio.netty.noKeySetOptimization=true -Dio.netty.recycler.maxCapacityPerThread=0 -Dlog4j.shutdownHookEnabled=false -Dlog4j2.disable.jmx=true -Djava.io.tmpdir=/tmp/elasticsearch.XBBs5uL1 -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc*,gc+age=trace,safepoint:file=logs/gc.log:utctime,pid,tags:filecount=32,filesize=64m -Djava.locale.providers=COMPAT -Des.cgroups.hierarchy.override=/ -Xshare:dump -XX:+UseAppCDS -XX:SharedClassListFile=/app/cache/elasticsearch_appcds.cls -XX:+UnlockDiagnosticVMOptions -XX:SharedArchiveFile=/app/cache/elasticsearch_appcds.jsa -Des.path.home=/usr/share/elasticsearch -Des.path.conf=/usr/share/elasticsearch/config org.elasticsearch.bootstrap.Elasticsearch -Ediscovery.type=single-node
+
+Host: Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz, 2 cores, 14G, CentOS Linux release 7.4.1708 (Core)
+Time: Fri May 18 11:05:37 2018 UTC elapsed time: 5 seconds (0d 0h 0m 5s)
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007f398c214890):  VMThread "VM Thread" [stack: 0x00007f3970fc7000,0x00007f39710c7000] [id=118]
+
+Stack: [0x00007f3970fc7000,0x00007f39710c7000],  sp=0x00007f39710c54b0,  free space=1017k
+Native frames: (J=compiled Java code, A=aot compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [libjvm.so+0xd3c25c]  VMError::report_and_die(int, char const*, char const*, __va_list_tag*, Thread*, unsigned char*, void*, void*, char const*, int, unsigned long)+0x15c
+V  [libjvm.so+0xd3ceaf]  VMError::report_and_die(Thread*, char const*, int, char const*, char const*, __va_list_tag*)+0x2f
+V  [libjvm.so+0x68b303]  report_fatal(char const*, int, char const*, ...)+0xe3
+V  [libjvm.so+0xd4b6ef]  VMThread::execute(VM_Operation*)+0xbf
+V  [libjvm.so+0x618298]  CollectorPolicy::satisfy_failed_metadata_allocation(ClassLoaderData*, unsigned long, Metaspace::MetadataType)+0xc8
+V  [libjvm.so+0xade161]  Metaspace::allocate(ClassLoaderData*, unsigned long, MetaspaceObj::Type, Thread*)+0x161
+V  [libjvm.so+0xcada1d]  SharedDictionaryEntry::finalize_verification_constraints()+0x19d
+V  [libjvm.so+0xcadcb0]  SystemDictionaryShared::finalize_verification_constraints()+0x60
+V  [libjvm.so+0xae527e]  VM_PopulateDumpSharedSpace::doit()+0x60e
+V  [libjvm.so+0xd4c9ca]  VM_Operation::evaluate()+0x19a
+V  [libjvm.so+0xd4a4c3]  VMThread::evaluate_operation(VM_Operation*)+0xa3
+V  [libjvm.so+0xd4ae9f]  VMThread::loop()+0x27f
+V  [libjvm.so+0xd4b502]  VMThread::run()+0x72
+V  [libjvm.so+0xb5a6e2]  thread_native_entry(Thread*)+0xf2
+
+VM_Operation (0x00007f3992aa1ba0): PopulateDumpSharedSpace, mode: safepoint, requested by thread 0x00007f398c011610
+
+
+---------------  P R O C E S S  ---------------
+
+Threads class SMR info:
+_java_thread_list=0x00007f398c49de40, length=6, elements={
+0x00007f398c011610, 0x00007f398c2431e0, 0x00007f398c244ed0, 0x00007f398c2d3de0,
+0x00007f398c3e4530, 0x00007f398c54f550
+}
+
+Java Threads: ( => current thread )
+  0x00007f398c011610 JavaThread "main" [_thread_blocked, id=114, stack(0x00007f39929a3000,0x00007f3992aa4000)]
+  0x00007f398c2431e0 JavaThread "Reference Handler" daemon [_thread_blocked, id=119, stack(0x00007f3970ec5000,0x00007f3970fc6000)]
+  0x00007f398c244ed0 JavaThread "Finalizer" daemon [_thread_blocked, id=120, stack(0x00007f3970dc4000,0x00007f3970ec5000)]
+  0x00007f398c2d3de0 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=121, stack(0x00007f3970cc3000,0x00007f3970dc4000)]
+  0x00007f398c3e4530 JavaThread "Service Thread" daemon [_thread_blocked, id=122, stack(0x00007f3970bc2000,0x00007f3970cc3000)]
+  0x00007f398c54f550 JavaThread "Common-Cleaner" daemon [_thread_blocked, id=124, stack(0x00007f39709bf000,0x00007f3970ac0000)]
+
+Other Threads:
+=>0x00007f398c214890 VMThread "VM Thread" [stack: 0x00007f3970fc7000,0x00007f39710c7000] [id=118]
+  0x00007f398c3e6500 WatcherThread [stack: 0x00007f3970ac2000,0x00007f3970bc2000] [id=123]
+  0x00007f398c021f80 GCTaskThread "GC Thread#0" [stack: 0x00007f39731b4000,0x00007f39732b4000] [id=115]
+  0x00007f398c022ff0 GCTaskThread "GC Thread#1" [stack: 0x00007f39730b3000,0x00007f39731b3000] [id=116]
+  0x00007f398c04fe20 ConcurrentGCThread "CMS Main Thread" [stack: 0x00007f3971a99000,0x00007f3971b99000] [id=117]
+
+Threads with active compile tasks:
+
+VM state:at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread:  ([mutex/lock_event])
+[0x00007f398c00eeb0] Threads_lock - owner thread: 0x00007f398c214890
+
+Heap address: 0x00000000c0000000, size: 1024 MB, Compressed Oops mode: 32-bit
+Narrow klass base: 0x0000000800000000, Narrow klass shift: 3
+Compressed class space size: 1073741824 Address: 0x00000008c0000000
+
+Heap:
+ par new generation   total 153344K, used 128499K [0x00000000c0000000, 0x00000000ca660000, 0x00000000ca660000)
+  eden space 136320K,  94% used [0x00000000c0000000, 0x00000000c7d7cf20, 0x00000000c8520000)
+  from space 17024K,   0% used [0x00000000c8520000, 0x00000000c8520000, 0x00000000c95c0000)
+  to   space 17024K,   0% used [0x00000000c95c0000, 0x00000000c95c0000, 0x00000000ca660000)
+ concurrent mark-sweep generation total 878208K, used 0K [0x00000000ca660000, 0x0000000100000000, 0x0000000100000000)
+ Metaspace       used 45169K, capacity 45283K, committed 45532K, reserved 1089536K
+  class space    used 5007K, capacity 5090K, committed 5148K, reserved 1048576K
+
+Card table byte_map: [0x00007f3972eb1000,0x00007f39730b2000] byte_map_base: 0x00007f39728b1000
+
+Marking Bits: (CMSBitMap*) 0x00007f398c04f388
+ Bits: [0x00007f3971d9b000, 0x00007f3972b01800)
+
+Mod Union Table: (CMSBitMap*) 0x00007f398c04f428
+ Bits: [0x00007f3992965000, 0x00007f399299a9a0)
+
+Polling page: 0x00007f3992aaa000
+
+CodeHeap 'non-nmethods': size=245760Kb used=770Kb max_used=770Kb free=244989Kb
+ bounds [0x00007f39732b4000, 0x00007f3973524000, 0x00007f39822b4000]
+ total_blobs=820 nmethods=0 adapters=770
+ compilation: disabled (interpreter mode)
+
+Compilation events (0 events):
+No events
+
+GC Heap History (0 events):
+No events
+
+Deoptimization events (0 events):
+No events
+
+Classes redefined (0 events):
+No events
+
+Internal exceptions (10 events):
+Event: 1.469 Thread 0x00007f398c011610 Exception <a 'java/lang/NoClassDefFoundError'{0x00000000c1a58068}: com/lmax/disruptor/EventTranslatorVararg> (0x00000000c1a58068) thrown at [/scratch/opt/mach5/mesos/work_dir/slaves/e283bbd4-d3d7-4cc0-a152-4405cadfe7cb-S457/frameworks/1735e8a2-a1db-478c-8
+Event: 1.472 Thread 0x00007f398c011610 Exception <a 'java/lang/ClassNotFoundException'{0x00000000c1a649d8}> (0x00000000c1a649d8) thrown at [/scratch/opt/mach5/mesos/work_dir/slaves/e283bbd4-d3d7-4cc0-a152-4405cadfe7cb-S457/frameworks/1735e8a2-a1db-478c-8104-60c8b0af87dd-0196/executors/2a1032ca
+Event: 1.474 Thread 0x00007f398c011610 Exception <a 'java/lang/ClassNotFoundException'{0x00000000c1a6f360}> (0x00000000c1a6f360) thrown at [/scratch/opt/mach5/mesos/work_dir/slaves/e283bbd4-d3d7-4cc0-a152-4405cadfe7cb-S457/frameworks/1735e8a2-a1db-478c-8104-60c8b0af87dd-0196/executors/2a1032ca
+Event: 1.511 Thread 0x00007f398c011610 Exception <a 'java/lang/ClassNotFoundException'{0x00000000c1b12e60}> (0x00000000c1b12e60) thrown at [/scratch/opt/mach5/mesos/work_dir/slaves/e283bbd4-d3d7-4cc0-a152-4405cadfe7cb-S457/frameworks/1735e8a2-a1db-478c-8104-60c8b0af87dd-0196/executors/2a1032ca
+Event: 1.514 Thread 0x00007f398c011610 Exception <a 'java/lang/ClassNotFoundException'{0x00000000c1b1f540}> (0x00000000c1b1f540) thrown at [/scratch/opt/mach5/mesos/work_dir/slaves/e283bbd4-d3d7-4cc0-a152-4405cadfe7cb-S457/frameworks/1735e8a2-a1db-478c-8104-60c8b0af87dd-0196/executors/2a1032ca
+Event: 1.593 Thread 0x00007f398c011610 Exception <a 'java/lang/ClassNotFoundException'{0x00000000c1cbd2f8}> (0x00000000c1cbd2f8) thrown at [/scratch/opt/mach5/mesos/work_dir/slaves/e283bbd4-d3d7-4cc0-a152-4405cadfe7cb-S457/frameworks/1735e8a2-a1db-478c-8104-60c8b0af87dd-0196/executors/2a1032ca
+Event: 5.062 Thread 0x00007f398c011610 Exception <a 'java/lang/ClassNotFoundException'{0x00000000c6b75258}> (0x00000000c6b75258) thrown at [/scratch/opt/mach5/mesos/work_dir/slaves/e283bbd4-d3d7-4cc0-a152-4405cadfe7cb-S457/frameworks/1735e8a2-a1db-478c-8104-60c8b0af87dd-0196/executors/2a1032ca
+Event: 5.069 Thread 0x00007f398c011610 Exception <a 'java/lang/ClassNotFoundException'{0x00000000c6b98c48}> (0x00000000c6b98c48) thrown at [/scratch/opt/mach5/mesos/work_dir/slaves/e283bbd4-d3d7-4cc0-a152-4405cadfe7cb-S457/frameworks/1735e8a2-a1db-478c-8104-60c8b0af87dd-0196/executors/2a1032ca
+Event: 5.083 Thread 0x00007f398c011610 Exception <a 'java/lang/ClassNotFoundException'{0x00000000c6be8a78}> (0x00000000c6be8a78) thrown at [/scratch/opt/mach5/mesos/work_dir/slaves/e283bbd4-d3d7-4cc0-a152-4405cadfe7cb-S457/frameworks/1735e8a2-a1db-478c-8104-60c8b0af87dd-0196/executors/2a1032ca
+Event: 5.147 Thread 0x00007f398c011610 Exception <a 'java/lang/ClassNotFoundException'{0x00000000c6ded250}> (0x00000000c6ded250) thrown at [/scratch/opt/mach5/mesos/work_dir/slaves/e283bbd4-d3d7-4cc0-a152-4405cadfe7cb-S457/frameworks/1735e8a2-a1db-478c-8104-60c8b0af87dd-0196/executors/2a1032ca
+
+Events (10 events):
+Event: 5.807 loading class org/apache/lucene/util/automaton/LimitedFiniteStringsIterator done
+Event: 5.809 loading class org/apache/lucene/spatial/prefix/ContainsPrefixTreeQuery$SmallDocSet$1
+Event: 5.809 loading class org/apache/lucene/spatial/prefix/ContainsPrefixTreeQuery$SmallDocSet$1 done
+Event: 5.810 loading class org/apache/lucene/search/FieldValueHitQueue$OneComparatorFieldValueHitQueue
+Event: 5.810 loading class org/apache/lucene/search/FieldValueHitQueue$OneComparatorFieldValueHitQueue done
+Event: 5.811 loading class org/apache/lucene/search/FieldValueHitQueue$MultiComparatorsFieldValueHitQueue
+Event: 5.811 loading class org/apache/lucene/search/FieldValueHitQueue$MultiComparatorsFieldValueHitQueue done
+Event: 5.819 loading class org/apache/lucene/analysis/TokenStreamToAutomaton$Positions
+Event: 5.819 loading class org/apache/lucene/analysis/TokenStreamToAutomaton$Positions done
+Event: 5.837 Executing VM operation: PopulateDumpSharedSpace
+
+
+Dynamic libraries:
+00400000-00401000 r-xp 00000000 00:27 65                                 /opt/java/jdk-10.0.1/bin/java
+00600000-00601000 rw-p 00000000 00:27 65                                 /opt/java/jdk-10.0.1/bin/java
+00c51000-00c72000 rw-p 00000000 00:00 0                                  [heap]
+c0000000-100000000 rw-p 00000000 00:00 0
+800000000-800100000 rw-p 00000000 00:00 0
+800100000-8c0000000 ---p 00000000 00:00 0
+8c0000000-8c0507000 rw-p 00000000 00:00 0
+8c0507000-900000000 ---p 00000000 00:00 0
+7f3940000000-7f3940021000 rw-p 00000000 00:00 0
+7f3940021000-7f3944000000 ---p 00000000 00:00 0
+7f3948000000-7f3948021000 rw-p 00000000 00:00 0
+7f3948021000-7f394c000000 ---p 00000000 00:00 0
+7f394c000000-7f394c021000 rw-p 00000000 00:00 0
+7f394c021000-7f3950000000 ---p 00000000 00:00 0
+7f3950000000-7f3950021000 rw-p 00000000 00:00 0
+7f3950021000-7f3954000000 ---p 00000000 00:00 0
+7f3954000000-7f3954021000 rw-p 00000000 00:00 0
+7f3954021000-7f3958000000 ---p 00000000 00:00 0
+7f3958000000-7f3958037000 rw-p 00000000 00:00 0
+7f3958037000-7f395c000000 ---p 00000000 00:00 0
+7f395c000000-7f395c021000 rw-p 00000000 00:00 0
+7f395c021000-7f3960000000 ---p 00000000 00:00 0
+7f3960000000-7f3960021000 rw-p 00000000 00:00 0
+7f3960021000-7f3964000000 ---p 00000000 00:00 0
+7f3964000000-7f3964021000 rw-p 00000000 00:00 0
+7f3964021000-7f3968000000 ---p 00000000 00:00 0
+7f396810d000-7f396849d000 rw-p 00000000 00:00 0
+7f396849d000-7f396851f000 ---p 00000000 00:00 0
+7f396851f000-7f396871f000 rw-p 00000000 00:00 0
+7f396871f000-7f396891f000 rw-p 00000000 00:00 0
+7f396891f000-7f3968b11000 rw-p 00000000 00:00 0
+7f3968b11000-7f3968b1f000 ---p 00000000 00:00 0
+7f3968b1f000-7f3968d1f000 rw-p 00000000 00:00 0
+7f3968d1f000-7f3968f1f000 rw-p 00000000 00:00 0
+7f3968f1f000-7f396911f000 rw-p 00000000 00:00 0
+7f396911f000-7f396931f000 rw-p 00000000 00:00 0
+7f396931f000-7f396951f000 rw-p 00000000 00:00 0
+7f396951f000-7f396971f000 rw-p 00000000 00:00 0
+7f396971f000-7f396991f000 rw-p 00000000 00:00 0
+7f396991f000-7f3969c00000 rw-p 00000000 00:00 0
+7f3969c00000-7f3969e00000 rw-p 00000000 00:00 0
+7f3969e00000-7f396a000000 rw-p 00000000 00:00 0
+7f396a000000-7f396c000000 rw-p 00000000 00:00 0
+7f396c000000-7f396c021000 rw-p 00000000 00:00 0
+7f396c021000-7f3970000000 ---p 00000000 00:00 0
+7f3970032000-7f3970366000 rw-p 00000000 00:00 0
+7f3970366000-7f3970566000 rw-p 00000000 00:00 0
+7f3970566000-7f3970597000 rw-p 00000000 00:00 0
+7f3970597000-7f39705ad000 r-xp 00000000 00:27 131                        /opt/java/jdk-10.0.1/lib/libnet.so
+7f39705ad000-7f39707ad000 ---p 00016000 00:27 131                        /opt/java/jdk-10.0.1/lib/libnet.so
+7f39707ad000-7f39707ae000 rw-p 00016000 00:27 131                        /opt/java/jdk-10.0.1/lib/libnet.so
+7f39707ae000-7f39707be000 r-xp 00000000 00:27 130                        /opt/java/jdk-10.0.1/lib/libnio.so
+7f39707be000-7f39709be000 ---p 00010000 00:27 130                        /opt/java/jdk-10.0.1/lib/libnio.so
+7f39709be000-7f39709bf000 rw-p 00010000 00:27 130                        /opt/java/jdk-10.0.1/lib/libnio.so
+7f39709bf000-7f39709c3000 ---p 00000000 00:00 0
+7f39709c3000-7f3970ac1000 rw-p 00000000 00:00 0
+7f3970ac1000-7f3970ac2000 ---p 00000000 00:00 0
+7f3970ac2000-7f3970bc2000 rw-p 00000000 00:00 0
+7f3970bc2000-7f3970bc6000 ---p 00000000 00:00 0
+7f3970bc6000-7f3970cc3000 rw-p 00000000 00:00 0
+7f3970cc3000-7f3970cc7000 ---p 00000000 00:00 0
+7f3970cc7000-7f3970dc4000 rw-p 00000000 00:00 0
+7f3970dc4000-7f3970dc8000 ---p 00000000 00:00 0
+7f3970dc8000-7f3970ec5000 rw-p 00000000 00:00 0
+7f3970ec5000-7f3970ec9000 ---p 00000000 00:00 0
+7f3970ec9000-7f3970fc6000 rw-p 00000000 00:00 0
+7f3970fc6000-7f3970fc7000 ---p 00000000 00:00 0
+7f3970fc7000-7f39710c7000 rw-p 00000000 00:00 0
+7f39710c7000-7f39710c9000 r--s 0000b000 00:27 116                        /usr/share/elasticsearch/lib/t-digest-3.0.jar
+7f39710c9000-7f39710cd000 r--s 0002a000 00:27 115                        /usr/share/elasticsearch/lib/spatial4j-0.6.jar
+7f39710cd000-7f39710d3000 r--s 0003d000 00:27 114                        /usr/share/elasticsearch/lib/snakeyaml-1.17.jar
+7f39710d3000-7f39710d4000 r--s 00001000 00:27 113                        /usr/share/elasticsearch/lib/securesm-1.2.jar
+7f39710d4000-7f39710d5000 r--s 00007000 00:27 112                        /usr/share/elasticsearch/lib/plugin-cli-6.2.4.jar
+7f39710d5000-7f39710d6000 r--s 00001000 00:27 111                        /usr/share/elasticsearch/lib/plugin-classloader-6.2.4.jar
+7f39710d6000-7f39710db000 r--s 00038000 00:27 110                        /usr/share/elasticsearch/lib/lucene-suggest-7.2.1.jar
+7f39710db000-7f39710df000 r--s 00042000 00:27 109                        /usr/share/elasticsearch/lib/lucene-spatial3d-7.2.1.jar
+7f39710df000-7f39710e4000 r--s 00033000 00:27 108                        /usr/share/elasticsearch/lib/lucene-spatial-extras-7.2.1.jar
+7f39710e4000-7f39710e7000 r--s 0002a000 00:27 106                        /usr/share/elasticsearch/lib/lucene-sandbox-7.2.1.jar
+7f39710e7000-7f39710f0000 r--s 00055000 00:27 105                        /usr/share/elasticsearch/lib/lucene-queryparser-7.2.1.jar
+7f39710f0000-7f39710f7000 r--s 00039000 00:27 104                        /usr/share/elasticsearch/lib/lucene-queries-7.2.1.jar
+7f39710f7000-7f39710fa000 r--s 00014000 00:27 103                        /usr/share/elasticsearch/lib/lucene-misc-7.2.1.jar
+7f39710fa000-7f39710fc000 r--s 0000a000 00:27 102                        /usr/share/elasticsearch/lib/lucene-memory-7.2.1.jar
+7f39710fc000-7f3971101000 r--s 0002c000 00:27 100                        /usr/share/elasticsearch/lib/lucene-highlighter-7.2.1.jar
+7f3971101000-7f397112f000 r--s 0027c000 00:27 98                         /usr/share/elasticsearch/lib/lucene-core-7.2.1.jar
+7f397112f000-7f3971140000 r--s 0017b000 00:27 96                         /usr/share/elasticsearch/lib/lucene-analyzers-common-7.2.1.jar
+7f3971140000-7f397115f000 r--s 0015c000 00:27 95                         /usr/share/elasticsearch/lib/log4j-core-2.9.1.jar
+7f397115f000-7f3971170000 r--s 000b2000 00:27 92                         /usr/share/elasticsearch/lib/jts-1.13.jar
+7f3971170000-7f3971181000 r--s 0008a000 00:27 90                         /usr/share/elasticsearch/lib/joda-time-2.9.9.jar
+7f3971181000-7f3971222000 r--s 008d8000 00:27 80                         /usr/share/elasticsearch/lib/elasticsearch-6.2.4.jar
+7f3971222000-7f3971a98000 rw-p 00000000 00:00 0
+7f3971a98000-7f3971a99000 ---p 00000000 00:00 0
+7f3971a99000-7f39730b1000 rw-p 00000000 00:00 0
+7f39730b1000-7f39730b2000 rw-p 00000000 00:00 0
+7f39730b2000-7f39730b3000 ---p 00000000 00:00 0
+7f39730b3000-7f39731b3000 rw-p 00000000 00:00 0
+7f39731b3000-7f39731b4000 ---p 00000000 00:00 0
+7f39731b4000-7f39732b4000 rw-p 00000000 00:00 0
+7f39732b4000-7f3973524000 rwxp 00000000 00:00 0
+7f3973524000-7f39822b4000 ---p 00000000 00:00 0
+7f39822b4000-7f398b78d000 r--s 00000000 00:27 119                        /opt/java/jdk-10.0.1/lib/modules
+7f398b78d000-7f398b7a7000 r-xp 00000000 00:27 129                        /opt/java/jdk-10.0.1/lib/libjimage.so
+7f398b7a7000-7f398b9a6000 ---p 0001a000 00:27 129                        /opt/java/jdk-10.0.1/lib/libjimage.so
+7f398b9a6000-7f398b9a8000 rw-p 00019000 00:27 129                        /opt/java/jdk-10.0.1/lib/libjimage.so
+7f398b9a8000-7f398b9ba000 rw-p 00000000 00:00 0
+7f398b9ba000-7f398b9c1000 r-xp 00000000 00:27 128                        /opt/java/jdk-10.0.1/lib/libzip.so
+7f398b9c1000-7f398bbc0000 ---p 00007000 00:27 128                        /opt/java/jdk-10.0.1/lib/libzip.so
+7f398bbc0000-7f398bbc1000 rw-p 00006000 00:27 128                        /opt/java/jdk-10.0.1/lib/libzip.so
+7f398bbc1000-7f398bbcd000 r-xp 00000000 00:27 47                         /usr/lib64/libnss_files-2.17.so
+7f398bbcd000-7f398bdcc000 ---p 0000c000 00:27 47                         /usr/lib64/libnss_files-2.17.so
+7f398bdcc000-7f398bdcd000 r--p 0000b000 00:27 47                         /usr/lib64/libnss_files-2.17.so
+7f398bdcd000-7f398bdce000 rw-p 0000c000 00:27 47                         /usr/lib64/libnss_files-2.17.so
+7f398bdce000-7f398bdd4000 rw-p 00000000 00:00 0
+7f398bdd4000-7f398bdfe000 r-xp 00000000 00:27 72                         /opt/java/jdk-10.0.1/lib/libjava.so
+7f398bdfe000-7f398bffe000 ---p 0002a000 00:27 72                         /opt/java/jdk-10.0.1/lib/libjava.so
+7f398bffe000-7f398c000000 rw-p 0002a000 00:27 72                         /opt/java/jdk-10.0.1/lib/libjava.so
+7f398c000000-7f398f1ea000 rw-p 00000000 00:00 0
+7f398f1ea000-7f3990000000 ---p 00000000 00:00 0
+7f3990000000-7f3990004000 r--s 00020000 00:27 101                        /usr/share/elasticsearch/lib/lucene-join-7.2.1.jar
+7f3990004000-7f3990007000 r--s 00013000 00:27 99                         /usr/share/elasticsearch/lib/lucene-grouping-7.2.1.jar
+7f3990007000-7f399000a000 r--s 00016000 00:27 97                         /usr/share/elasticsearch/lib/lucene-backward-codecs-7.2.1.jar
+7f399000a000-7f399000f000 rw-p 00000000 00:00 0
+7f399000f000-7f39901ea000 ---p 00000000 00:00 0
+7f39901ea000-7f39901f7000 r-xp 00000000 00:27 120                        /opt/java/jdk-10.0.1/lib/libverify.so
+7f39901f7000-7f39903f6000 ---p 0000d000 00:27 120                        /opt/java/jdk-10.0.1/lib/libverify.so
+7f39903f6000-7f39903f8000 rw-p 0000c000 00:27 120                        /opt/java/jdk-10.0.1/lib/libverify.so
+7f39903f8000-7f39903ff000 r-xp 00000000 00:27 118                        /usr/lib64/librt-2.17.so
+7f39903ff000-7f39905fe000 ---p 00007000 00:27 118                        /usr/lib64/librt-2.17.so
+7f39905fe000-7f39905ff000 r--p 00006000 00:27 118                        /usr/lib64/librt-2.17.so
+7f39905ff000-7f3990600000 rw-p 00007000 00:27 118                        /usr/lib64/librt-2.17.so
+7f3990600000-7f3990701000 r-xp 00000000 00:27 77                         /usr/lib64/libm-2.17.so
+7f3990701000-7f3990900000 ---p 00101000 00:27 77                         /usr/lib64/libm-2.17.so
+7f3990900000-7f3990901000 r--p 00100000 00:27 77                         /usr/lib64/libm-2.17.so
+7f3990901000-7f3990902000 rw-p 00101000 00:27 77                         /usr/lib64/libm-2.17.so
+7f3990902000-7f3991912000 r-xp 00000000 00:27 75                         /opt/java/jdk-10.0.1/lib/server/libjvm.so
+7f3991912000-7f3991b11000 ---p 01010000 00:27 75                         /opt/java/jdk-10.0.1/lib/server/libjvm.so
+7f3991b11000-7f3991bee000 r--p 0100f000 00:27 75                         /opt/java/jdk-10.0.1/lib/server/libjvm.so
+7f3991bee000-7f3991c27000 rw-p 010ec000 00:27 75                         /opt/java/jdk-10.0.1/lib/server/libjvm.so
+7f3991c27000-7f3991c84000 rw-p 00000000 00:00 0
+7f3991c84000-7f3991e3c000 r-xp 00000000 00:27 41                         /usr/lib64/libc-2.17.so
+7f3991e3c000-7f399203c000 ---p 001b8000 00:27 41                         /usr/lib64/libc-2.17.so
+7f399203c000-7f3992040000 r--p 001b8000 00:27 41                         /usr/lib64/libc-2.17.so
+7f3992040000-7f3992042000 rw-p 001bc000 00:27 41                         /usr/lib64/libc-2.17.so
+7f3992042000-7f3992047000 rw-p 00000000 00:00 0
+7f3992047000-7f3992049000 r-xp 00000000 00:27 39                         /usr/lib64/libdl-2.17.so
+7f3992049000-7f3992249000 ---p 00002000 00:27 39                         /usr/lib64/libdl-2.17.so
+7f3992249000-7f399224a000 r--p 00002000 00:27 39                         /usr/lib64/libdl-2.17.so
+7f399224a000-7f399224b000 rw-p 00003000 00:27 39                         /usr/lib64/libdl-2.17.so
+7f399224b000-7f3992259000 r-xp 00000000 00:27 70                         /opt/java/jdk-10.0.1/lib/jli/libjli.so
+7f3992259000-7f3992459000 ---p 0000e000 00:27 70                         /opt/java/jdk-10.0.1/lib/jli/libjli.so
+7f3992459000-7f399245a000 rw-p 0000e000 00:27 70                         /opt/java/jdk-10.0.1/lib/jli/libjli.so
+7f399245a000-7f3992471000 r-xp 00000000 00:27 58                         /usr/lib64/libpthread-2.17.so
+7f3992471000-7f3992670000 ---p 00017000 00:27 58                         /usr/lib64/libpthread-2.17.so
+7f3992670000-7f3992671000 r--p 00016000 00:27 58                         /usr/lib64/libpthread-2.17.so
+7f3992671000-7f3992672000 rw-p 00017000 00:27 58                         /usr/lib64/libpthread-2.17.so
+7f3992672000-7f3992676000 rw-p 00000000 00:00 0
+7f3992676000-7f399268b000 r-xp 00000000 00:27 69                         /usr/lib64/libz.so.1.2.7
+7f399268b000-7f399288a000 ---p 00015000 00:27 69                         /usr/lib64/libz.so.1.2.7
+7f399288a000-7f399288b000 r--p 00014000 00:27 69                         /usr/lib64/libz.so.1.2.7
+7f399288b000-7f399288c000 rw-p 00015000 00:27 69                         /usr/lib64/libz.so.1.2.7
+7f399288c000-7f39928ad000 r-xp 00000000 00:27 34                         /usr/lib64/ld-2.17.so
+7f39928ad000-7f39928ae000 r--s 00003000 00:27 107                        /usr/share/elasticsearch/lib/lucene-spatial-7.2.1.jar
+7f39928ae000-7f39928b3000 r--s 00036000 00:27 94                         /usr/share/elasticsearch/lib/log4j-api-2.9.1.jar
+7f39928b3000-7f39928b6000 r--s 0000d000 00:27 93                         /usr/share/elasticsearch/lib/log4j-1.2-api-2.9.1.jar
+7f39928b6000-7f39928b9000 r--s 00011000 00:27 91                         /usr/share/elasticsearch/lib/jopt-simple-5.0.2.jar
+7f39928b9000-7f39928bd000 r--s 000d5000 00:27 89                         /usr/share/elasticsearch/lib/jna-4.5.1.jar
+7f39928bd000-7f39928be000 r--s 00009000 00:27 88                         /usr/share/elasticsearch/lib/jackson-dataformat-yaml-2.8.10.jar
+7f39928be000-7f39928c0000 r--s 00011000 00:27 87                         /usr/share/elasticsearch/lib/jackson-dataformat-smile-2.8.10.jar
+7f39928c0000-7f39928c2000 r--s 0000b000 00:27 86                         /usr/share/elasticsearch/lib/jackson-dataformat-cbor-2.8.10.jar
+7f39928c2000-7f39928c6000 r--s 00042000 00:27 85                         /usr/share/elasticsearch/lib/jackson-core-2.8.10.jar
+7f39928c6000-7f39928dd000 r--s 00100000 00:27 84                         /usr/share/elasticsearch/lib/hppc-0.7.1.jar
+7f39928dd000-7f39928de000 r--s 00003000 00:27 83                         /usr/share/elasticsearch/lib/elasticsearch-launchers-6.2.4.jar
+7f39928de000-7f39928df000 r--s 00004000 00:27 82                         /usr/share/elasticsearch/lib/elasticsearch-core-6.2.4.jar
+7f39928df000-7f39928e0000 r--s 00003000 00:27 81                         /usr/share/elasticsearch/lib/elasticsearch-cli-6.2.4.jar
+7f39928e0000-7f39928e2000 r--s 0001a000 00:27 79                         /usr/share/elasticsearch/lib/HdrHistogram-2.1.9.jar
+7f39928e2000-7f399299b000 rw-p 00000000 00:00 0
+7f399299b000-7f39929a3000 rw-s 00000000 00:27 158                        /tmp/hsperfdata_elasticsearch/1
+7f39929a3000-7f39929a7000 ---p 00000000 00:00 0
+7f39929a7000-7f3992aaa000 rw-p 00000000 00:00 0
+7f3992aaa000-7f3992aab000 ---p 00000000 00:00 0
+7f3992aab000-7f3992aac000 r--p 00000000 00:00 0
+7f3992aac000-7f3992aad000 rw-p 00000000 00:00 0
+7f3992aad000-7f3992aae000 r--p 00021000 00:27 34                         /usr/lib64/ld-2.17.so
+7f3992aae000-7f3992aaf000 rw-p 00022000 00:27 34                         /usr/lib64/ld-2.17.so
+7f3992aaf000-7f3992ab0000 rw-p 00000000 00:00 0
+7fff87f67000-7fff87f88000 rw-p 00000000 00:00 0                          [stack]
+7fff87fe9000-7fff87fec000 r--p 00000000 00:00 0                          [vvar]
+7fff87fec000-7fff87fee000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+
+
+VM Arguments:
+jvm_args: -Xms1g -Xmx1g -XX:+UseConcMarkSweepGC -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly -XX:+AlwaysPreTouch -Xss1m -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Djna.nosys=true -XX:-OmitStackTraceInFastThrow -Dio.netty.noUnsafe=true -Dio.netty.noKeySetOptimization=true -Dio.netty.recycler.maxCapacityPerThread=0 -Dlog4j.shutdownHookEnabled=false -Dlog4j2.disable.jmx=true -Djava.io.tmpdir=/tmp/elasticsearch.XBBs5uL1 -XX:+HeapDumpOnOutOfMemoryError -Xlog:gc*,gc+age=trace,safepoint:file=logs/gc.log:utctime,pid,tags:filecount=32,filesize=64m -Djava.locale.providers=COMPAT -Des.cgroups.hierarchy.override=/ -Xshare:dump -XX:+UseAppCDS -XX:SharedClassListFile=/app/cache/elasticsearch_appcds.cls -XX:+UnlockDiagnosticVMOptions -XX:SharedArchiveFile=/app/cache/elasticsearch_appcds.jsa -Des.path.home=/usr/share/elasticsearch -Des.path.conf=/usr/share/elasticsearch/config
+java_command: org.elasticsearch.bootstrap.Elasticsearch -Ediscovery.type=single-node
+java_class_path (initial): /usr/share/elasticsearch/lib/HdrHistogram-2.1.9.jar:/usr/share/elasticsearch/lib/elasticsearch-6.2.4.jar:/usr/share/elasticsearch/lib/elasticsearch-cli-6.2.4.jar:/usr/share/elasticsearch/lib/elasticsearch-core-6.2.4.jar:/usr/share/elasticsearch/lib/elasticsearch-launchers-6.2.4.jar:/usr/share/elasticsearch/lib/hppc-0.7.1.jar:/usr/share/elasticsearch/lib/jackson-core-2.8.10.jar:/usr/share/elasticsearch/lib/jackson-dataformat-cbor-2.8.10.jar:/usr/share/elasticsearch/lib/jackson-dataformat-smile-2.8.10.jar:/usr/share/elasticsearch/lib/jackson-dataformat-yaml-2.8.10.jar:/usr/share/elasticsearch/lib/jna-4.5.1.jar:/usr/share/elasticsearch/lib/joda-time-2.9.9.jar:/usr/share/elasticsearch/lib/jopt-simple-5.0.2.jar:/usr/share/elasticsearch/lib/jts-1.13.jar:/usr/share/elasticsearch/lib/log4j-1.2-api-2.9.1.jar:/usr/share/elasticsearch/lib/log4j-api-2.9.1.jar:/usr/share/elasticsearch/lib/log4j-core-2.9.1.jar:/usr/share/elasticsearch/lib/lucene-analyzers-common-7.2.1.jar:/usr/share/elasticsearch/lib/lucene-backward-codecs-7.2.1.jar:/usr/share/elasticsearch/lib/lucene-core-7.2.1.jar:/usr/share/elasticsearch/lib/lucene-grouping-7.2.1.jar:/usr/share/elasticsearch/lib/lucene-highlighter-7.2.1.jar:/usr/share/elasticsearch/lib/lucene-join-7.2.1.jar:/usr/share/elasticsearch/lib/lucene-memory-7.2.1.jar:/usr/share/elasticsearch/lib/lucene-misc-7.2.1.jar:/usr/share/elasticsearch/lib/lucene-queries-7.2.1.jar:/usr/share/elasticsearch/lib/lucene-queryparser-7.2.1.jar:/usr/share/elasticsearch/lib/lucene-sandbox-7.2.1.jar:/usr/share/elasticsearch/lib/lucene-spatial-7.2.1.jar:/usr/share/elasticsearch/lib/lucene-spatial-extras-7.2.1.jar:/usr/share/elasticsearch/lib/lucene-spatial3d-7.2.1.jar:/usr/share/elasticsearch/lib/lucene-suggest-7.2.1.jar:/usr/share/elasticsearch/lib/plugin-classloader-6.2.4.jar:/usr/share/elasticsearch/lib/plugin-cli-6.2.4.jar:/usr/share/elasticsearch/lib/securesm-1.2.jar:/usr/share/elasticsearch/lib/snakeyaml-1.17.jar:/usr/share/elasticsearch
+Launcher Type: SUN_STANDARD
+
+Logging:
+Log output configuration:
+#0: stdout all=warning uptime,level,tags
+#1: stderr all=off uptime,level,tags
+#2: file=logs/gc.log gc+ref=info,gc+ref+start=info,gc+compaction=info,safepoint=info,gc+metaspace+alloc=info,gc+metaspace=info,gc+metaspace+freelist=info,gc+metaspace+freelist+blocks=info,gc+heap+exit=info,gc+cpu=info,gc+task+time=info,gc+task+thread=info,gc+jni=info,gc+stringdedup=info,gc+marking+start=info,gc+remset+exit=info,gc+remset=info,gc+mmu=info,gc+ihop=info,gc+phases+task=info,gc+phases+ref=info,gc+verify+start=info,gc+ergo+ihop=info,gc+refine=info,gc+ergo+refine=info,gc+stats=info,gc+ergo+cset=info,gc+humongous=info,gc+stringtable=info,gc+task+stats=info,gc+heap+region=info,gc+ergo+heap=info,gc+marking=info,gc+phases+verify=info,gc+phases+verify+start=info,gc+phases=info,gc+phases+start=info,gc+survivor=info,gc+state=info,gc+promotion=info,gc+plab=info,gc+verify=info,gc+alloc=info,gc+liveness=info,gc+classhisto+start=info,gc+start=info,gc+classhisto=info,gc+barrier=info,gc+bot=info,gc+freelist+census=info,gc+freelist+stats=info,gc+region=info,gc+heap+coops=info,gc+heap=info,gc+age=trace,gc+ergo=info,gc=info,gc+tlab=info,gc+task=info,gc+freelist=info utctime,pid,tags filecount=32,filesize=64M
+
+Environment Variables:
+JAVA_HOME=/opt/java/jdk-10.0.1
+PATH=/usr/share/elasticsearch/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0xd3d000], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGBUS: [libjvm.so+0xd3d000], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGFPE: [libjvm.so+0xd3d000], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGPIPE: [libjvm.so+0xb511c0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGXFSZ: [libjvm.so+0xb511c0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGILL: [libjvm.so+0xd3d000], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGUSR2: [libjvm.so+0xb51550], sa_mask[0]=00000000000000000000000000000000, sa_flags=SA_RESTART|SA_SIGINFO
+SIGHUP: [libjvm.so+0xb514e0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGINT: [libjvm.so+0xb514e0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGTERM: [libjvm.so+0xb514e0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGQUIT: [libjvm.so+0xb514e0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+
+
+---------------  S Y S T E M  ---------------
+
+OS:CentOS Linux release 7.4.1708 (Core)
+uname:Linux 4.4.0-109-generic #132~14.04.1-Ubuntu SMP Tue Jan 9 21:46:42 UTC 2018 x86_64
+libc:glibc 2.17 NPTL 2.17
+rlimit: STACK 8192k, CORE 0k, NPROC 524288, NOFILE 1048576, AS infinity, DATA infinity, FSIZE infinity
+load average:0.35 0.30 0.17
+
+/proc/meminfo:
+MemTotal:       15664228 kB
+MemFree:        12628852 kB
+MemAvailable:   14001748 kB
+Buffers:           15604 kB
+Cached:          1558308 kB
+SwapCached:            0 kB
+Active:          1952668 kB
+Inactive:         898632 kB
+Active(anon):    1277768 kB
+Inactive(anon):      160 kB
+Active(file):     674900 kB
+Inactive(file):   898472 kB
+Unevictable:           0 kB
+Mlocked:               0 kB
+SwapTotal:       3080188 kB
+SwapFree:        3080188 kB
+Dirty:             94080 kB
+Writeback:             0 kB
+AnonPages:       1277456 kB
+Mapped:            77512 kB
+Shmem:               544 kB
+Slab:             115144 kB
+SReclaimable:      94608 kB
+SUnreclaim:        20536 kB
+KernelStack:        3200 kB
+PageTables:         6140 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:    10912300 kB
+Committed_AS:    1554548 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:           0 kB
+VmallocChunk:          0 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:   1114112 kB
+CmaTotal:              0 kB
+CmaFree:               0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:       68608 kB
+DirectMap2M:    15931392 kB
+
+container (cgroup) information:
+container_type: cgroupv1
+cpu_cpuset_cpus: 0-1
+cpu_memory_nodes: 0
+active_processor_count: 2
+cpu_quota: -1
+cpu_period: 100000
+cpu_shares: -1
+memory_limit_in_bytes: -1
+memory_and_swap_limit_in_bytes: -1
+memory_soft_limit_in_bytes: -1
+memory_usage_in_bytes: 1331675136
+memory_max_usage_in_bytes: 1331720192
+
+
+CPU:total 2 (initial active 2) (1 cores per cpu, 2 threads per core) family 6 model 62 stepping 4, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, aes, clmul, erms, ht, tsc
+CPU Model and flags from /proc/cpuinfo:
+model name	: Intel(R) Xeon(R) CPU E5-2670 v2 @ 2.50GHz
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx rdtscp lm constant_tsc rep_good nopl xtopology eagerfpu pni pclmulqdq ssse3 cx16 pcid sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx f16c rdrand hypervisor lahf_lm kaiser fsgsbase smep erms xsaveopt
+
+Memory: 4k page, physical 15664228k(12628852k free), swap 3080188k(3080188k free)
+
+vm_info: OpenJDK 64-Bit Server VM (10.0.1+10) for linux-amd64 JRE (10.0.1+10), built on Mar 26 2018 18:10:26 by "mach5one" with gcc 4.9.2
+
+END.
+#+END_SRC

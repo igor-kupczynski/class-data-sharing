@@ -8,8 +8,3 @@ RUN cd /app/pkg && \
     mv jdk-10.0.1 /opt/java
 
 ENV JAVA_HOME /opt/java/jdk-10.0.1
-
-RUN mkdir -p /app/cache && \
-    touch /app/cache/elasticsearch_appcds.cls && \
-    touch /app/cache/elasticsearch_appcds.jsa && \
-    chown -R 1000:1000 /app/cache

@@ -1,6 +1,14 @@
 #+TITLE: README
 
 * Tasks
+** Generate docker image with class cache
+- [X] Generate class list
+- [X] Dump class cache
+- [ ] What percentage of classes are loaded via CDS
+** Compare
+*** Load time
+*** Time to request
+*** Memory
 ** Baseline
 *** [X] Establish time to load
 **** Unscientific baseline

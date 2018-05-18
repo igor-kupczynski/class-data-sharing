@@ -1,2 +1,3 @@
 .DS_Store
+elasticsearch-docker/cache/*
 elasticsearch-docker/pkg/*

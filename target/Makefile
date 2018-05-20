@@ -76,17 +76,23 @@ CDS_IMAGE = ikupczynski/elasticsearch-oss:6.2.4-cds
 build-cds: dump-class-cache
 	@ docker build -f Dockerfile-cds -t $(CDS_IMAGE) .
 
-RUN_NO_CDS = export ES_JAVA_OPTS="-Xshare:off" && \
+RUN_NO_CDS = export ES_JAVA_OPTS="-Xshare:off \
+			-Xlog:class+load:file=/app/logs/classload-nocds.log " && \
 		docker run \
 			--rm --name run-no-cds \
 			-p 9200:9200 -p 9300:9300 \
 			-e "discovery.type=single-node" \
 			-v $(CWD)/cache:/app/cache \
+			-v $(CWD)/logs:/app/logs \
 			--env ES_JAVA_OPTS \
 			-it 
 
+.PHONY: clean-nocds-logs
+clean-nocds-logs:
+	@ rm -f logs/classload-nocds.log*
+
 .PHONY: run-nocds
-run-nocds:
+run-nocds: clean-nocds-logs
 	@ $(RUN_NO_CDS) $(CDS_IMAGE)
 
 # `time-nocds` given mostly for illustration, it is not too acurate
@@ -98,6 +104,7 @@ time-nocds:
 	@ docker rm -f run-no-cds
 
 RUN_CDS = export ES_JAVA_OPTS="-Xshare:on \
+			-Xlog:class+load:file=/app/logs/classload-cds.log \
 			-XX:+UseAppCDS \
 			-XX:SharedClassListFile=/app/cache/elasticsearch_appcds.cls-thin \
 			-XX:+UnlockDiagnosticVMOptions \
@@ -107,8 +114,13 @@ RUN_CDS = export ES_JAVA_OPTS="-Xshare:on \
 			-p 9200:9200 -p 9300:9300 \
 			-e "discovery.type=single-node" \
 			-v $(CWD)/cache:/app/cache \
+			-v $(CWD)/logs:/app/logs \
 			--env ES_JAVA_OPTS \
 			-it
+
+.PHONY: clean-cds-logs
+clean-cds-logs:
+	@ rm -f logs/classload-cds.log*
 
 .PHONY: run-cds
 run-cds:

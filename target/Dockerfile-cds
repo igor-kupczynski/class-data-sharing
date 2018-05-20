@@ -1,3 +1,4 @@
+# Dockerfile-cds
 FROM ikupczynski/elasticsearch-oss:6.2.4-openjdk10
 
 COPY cache/ /app/cache

@@ -1,63 +1,321 @@
 #+TITLE: README
 
-* Tasks
-** Generate docker image with class cache
-- [X] Generate class list
-- [X] Dump class cache
-- [ ] What percentage of classes are loaded via CDS
-** Compare
-*** Load time
-*** Time to request
-*** Memory
-** Baseline
-*** [X] Establish time to load
-**** Unscientific baseline
+This post investigates the gains from enabling Class Data Sharing (CDS) on an
+elasticsearch container.
 
-- Time to serve the request
-- Via a shell script =make time=
-- On local laptop
-  
-  #+BEGIN_SRC sh
-$ make time
-2274be994b13eb141ad160b7d7229252adb6f6b9acad0657008f7b1dea6696f4
-Timing the wait on elastic
-......        6.47 real         0.05 user         0.06 sys
-foo
-$ make time
-879eadf4fbea38e0404a2959591369789ae61b4c67acbd440aced14670795f2b
-Timing the wait on elastic
-.......        7.42 real         0.06 user         0.07 sys
-foo
-$ make time
-2c9d1120652874111aa1a524a70610a099240de8ded1b1d62d2c03f2484d81f9
-Timing the wait on elastic
-.......        7.42 real         0.06 user         0.07 sys
-foo
-  #+END_SRC
-
-**** Time to load the class
-
-#+BEGIN_SRC sh
-$ docker run --rm -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" --env ES_JAVA_OPTS="-Xlog:class+load:file=clstrace.log" -it "igor-kupczynski/elasticsearch-oss:6.2.4-jdk10"
+* What is Class Data Sharing?
 
 
-# then in a different tab
+** What can we gain?
 
-$ docker exec -it infallible_mirzakhani bash
-# grep org.elasticsearch.bootstrap.Elasticsearch clstrace.log*
-clstrace.log:[0.381s][info][class,load] org.elasticsearch.bootstrap.Elasticsearch source: file:/usr/share/elasticsearch/lib/elasticsearch-6.2.4.jar
+
+* Experiment
+
+** Intro --- we need OpenJDK 10
+
+Let's use elasticsearch docker image to test the impact of class data sharing.
+
+First, we need to repackage it with openjdk 10.
+
+#+BEGIN_SRC dockerfile :tangle target/Dockerfile-openjdk10
+# Dockerfile-openjdk10
+FROM docker.elastic.co/elasticsearch/elasticsearch-oss:6.2.4
+
+COPY pkg/ /app/pkg
+
+RUN cd /app/pkg && \
+    tar -zxf openjdk-10.0.1_linux-x64_bin.tar.gz && \
+    mkdir -p /opt/java && \
+    mv jdk-10.0.1 /opt/java
+
+ENV JAVA_HOME /opt/java/jdk-10.0.1
 #+END_SRC
 
-*** [ ] Establish memory usage
+Let's create a Makefile, we'll add more to it as we go:
+#+BEGIN_SRC makefile :tangle target/Makefile
+# Makefile
+.PHONY: help
+help:
+	@ echo "# Elasticsearch and Class Data Sharing (CDS) experiment"
+	@ echo
+	@ echo "build-jdk10         - repackage elasticsearch-oss with openjdk10"
+	@ echo 
+	@ echo "clean-cache         - nuke the class list and cache"
+	@ echo "generate-class-list - list classes used by elasticsearch"
+	@ echo "dump-class-cache    - dump the classes from the list to cache file"
+	@ echo "build-cds           - repackge the class cache in the elasticsearch docker container"
+	@ echo
+	@ echo "run-{cds/nocds}     - run elasticsearch with/without class data sharing"
+	@ echo
 
-** Class data sharing
-*** Dump
+pkg/openjdk-10.0.1_linux-x64_bin.tar.gz:
+	@ wget -P pkg https://download.java.net/java/GA/jdk10/10.0.1/fb4372174a714e6b8c52526dc134031e/10/openjdk-10.0.1_linux-x64_bin.tar.gz
 
-#+BEGIN_SRC sh
-export ES_JAVA_OPTS="-Xshare:dump -XX:+UseAppCDS \
-    -XX:SharedClassListFile=/app/cache/elasticsearch_appcds.cls \
-    -XX:+UnlockDiagnosticVMOptions \
-    -XX:SharedArchiveFile=/app/cache/elasticsearch_appcds.jsa"
-docker run --rm -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" --env ES_JAVA_OPTS -it "igor-kupczynski/elasticsearch-oss:6.2.4-jdk10"
+pkg: pkg/openjdk-10.0.1_linux-x64_bin.tar.gz
+
+.PHONY: build-jdk10
+build-jdk10: pkg
+	@ docker build -f Dockerfile-openjdk10 -t "ikupczynski/elasticsearch-oss:6.2.4-openjdk10" .
+
 #+END_SRC
 
+And now we can get our repackaged image:
+#+BEGIN_SRC sh
+make build-jdk10
+#+END_SRC
+
+** Create a list of classes used by Elasticsearch
+
+We're going to run start elastics and let it log all the classes it uses to
+a file =-XX:DumpLoadedClassList=/app/cache/elasticsearch_appcds=. We need to
+specifically enable the support for application classes with =-XX:+UseAppCDS=,
+otherwise will limit ourselves to jdk classes only.
+
+#+BEGIN_SRC makefile :tangle target/Makefile
+CWD := $(shell pwd)
+
+.PHONY: clean-cache
+clean-cache:
+	@ rm -rf cache/elasticsearch_appcds*
+	@ echo "Nuked cache"
+
+cache/elasticsearch_appcds.cls:
+	@ touch cache/elasticsearch_appcds.cls
+	@ export ES_JAVA_OPTS="-XX:+UseAppCDS \
+			-XX:DumpLoadedClassList=/app/cache/elasticsearch_appcds.cls" && \
+		docker run \
+			-d --name generate-class-list \
+			-p 9200:9200 -p 9300:9300 \
+			-e "discovery.type=single-node" \
+			-v $(CWD)/cache:/app/cache \
+			--env ES_JAVA_OPTS \
+			-it "ikupczynski/elasticsearch-oss:6.2.4-openjdk10"
+	@ echo "Waiting until elasticsearch starts"
+	@ bin/wait-on-elastic
+	@ docker rm -f generate-class-list
+	@ echo "Class list generated. Number of classes: "
+	@ wc -l cache/elasticsearch_appcds.cls
+#+END_SRC
+
+
+We start elasticsearch in the background (=docker run -d=) and wait until it
+starts responding to requests with a following script:
+
+#+BEGIN_SRC sh :tangle target/bin/wait-on-elastic :shebang "#!/bin/bash"
+until $(curl --output /dev/null --silent --head --fail localhost:9200); do
+    printf '.'
+    sleep 1
+done
+#+END_SRC
+
+If we run =make cache/elasticsearch_appcds.cls= we'll get a list of
+approximately 7k classes used by elasticsearch.
+
+#+BEGIN_SRC sh
+$ make cache/elasticsearch_appcds.cls
+e2afbb966e1ad64d1296ada7c67a1038301834f8419aafa419ebbf74c7cd499b
+Waiting until elasticsearch starts
+...........generate-class-list
+Class list generated. Number of classes:
+    7111 cache/elasticsearch_appcds.cls
+
+$ head -n 5 cache/elasticsearch_appcds.cls
+java/lang/Object
+java/lang/String
+java/io/Serializable
+java/lang/Comparable
+java/lang/CharSequence
+
+$ tail -n 5 cache/elasticsearch_appcds.cls
+org/elasticsearch/common/io/Streams$FlushOnCloseOutputStream
+org/elasticsearch/Version$DeclaredVersionsHolder
+com/fasterxml/jackson/core/io/JsonStringEncoder
+com/fasterxml/jackson/core/util/ByteArrayBuilder
+org/elasticsearch/common/bytes/PagedBytesReference$1
+#+END_SRC
+
+Note that the list is generate while your app is running, so if you load any
+classes manually later on, you should exercise this codepath. In our case we
+just wait until elasticsearch can respond to a simple rest request.
+
+*** JVM error
+
+Normally, the next step would be to take the =elasticsearch_appcds= class list
+and use it to populate the cache file, however I've hit some limit (either a JVM
+bug, or more likely, some memory limits or docker-jvm interplay) and I needed to
+trim down the class list by 1/7 to around 6k. See [[error.org]] for more details.
+
+I leave the root cause investigation for some later time. Now, let's just trim
+the class list.
+
+#+BEGIN_SRC makefile :tangle target/Makefile
+# Workaround of the JVM error
+cache/elasticsearch_appcds.cls-thin: cache/elasticsearch_appcds.cls
+	@ head -n 6218 cache/elasticsearch_appcds.cls > cache/elasticsearch_appcds.cls-thin
+	@ echo "Filtered the class list. Number of classes: "
+	@ wc -l cache/elasticsearch_appcds.cls-thin
+
+generate-class-list: cache/elasticsearch_appcds.cls-thin
+
+#+END_SRC
+
+
+** Prepopulate the class cache
+
+Now that we have the class list, let's use it to pre-populate the class cache.
+Contrary to the previous step, here the jvm won't run the app. It will start a
+process to go through the class list, load each of the classes and dump them to
+the cache file and stop the jvm.
+
+
+#+BEGIN_SRC makefile :tangle target/Makefile
+cache/elasticsearch_appcds.jsa: generate-class-list
+	@ touch cache/elasticsearch_appcds.jsa
+	@ export ES_JAVA_OPTS="-Xshare:dump \
+			-XX:+UseAppCDS \
+			-XX:SharedClassListFile=/app/cache/elasticsearch_appcds.cls-thin \
+			-XX:+UnlockDiagnosticVMOptions \
+			-XX:SharedArchiveFile=/app/cache/elasticsearch_appcds.jsa" && \
+		docker run \
+			--rm --name dump-class-cache \
+			-e "discovery.type=single-node" \
+			-v $(CWD)/cache:/app/cache \
+			--env ES_JAVA_OPTS \
+			-it "ikupczynski/elasticsearch-oss:6.2.4-openjdk10"
+
+dump-class-cache: generate-class-list cache/elasticsearch_appcds.jsa
+
+#+END_SRC
+
+
+Let's try it out.
+#+BEGIN_SRC sh
+$ make dump-class-cache
+OpenJDK 64-Bit Server VM warning: Option UseConcMarkSweepGC was deprecated in version 9.0 and will likely be removed in a future release.
+narrow_klass_base = 0x0000000800000000, narrow_klass_shift = 3
+Allocated temporary class space: 1073741824 bytes at 0x00000008c0000000
+Allocated shared space: 3221225472 bytes at 0x0000000800000000
+Loading classes to share ...
+(...)
+Loading classes to share: done.
+Rewriting and linking classes ...
+Preload Warning: Removed error class: org.apache.logging.log4j.core.async.AsyncLoggerContext
+Rewriting and linking classes: done
+Number of classes 7211
+    instance classes   =  7087
+    obj array classes  =   116
+    type array classes =     8
+Updating ConstMethods ... done.
+Removing unshareable information ... done.
+Scanning all metaspace objects ...
+Allocating RW objects ...
+Allocating RO objects ...
+Relocating embedded pointers ...
+Relocating external roots ...
+Dumping symbol table ...
+Relocating SystemDictionary::_well_known_klasses[] ...
+(...)
+Removing java_mirror ... done.
+mc  space:     18184 [  0.0% of total] out of     20480 bytes [ 88.8% used] at 0x0000000800000000
+rw  space:  18630320 [ 22.6% of total] out of  18632704 bytes [100.0% used] at 0x0000000800005000
+ro  space:  31856600 [ 38.6% of total] out of  31858688 bytes [100.0% used] at 0x00000008011ca000
+md  space:      6160 [  0.0% of total] out of      8192 bytes [ 75.2% used] at 0x000000080302c000
+od  space:  31914104 [ 38.7% of total] out of  31916032 bytes [100.0% used] at 0x000000080302e000
+total    :  82425368 [100.0% of total] out of  82436096 bytes [100.0% used]
+#+END_SRC
+
+And the resulting file is ~80Mb~ of pre-loaded classes:
+#+BEGIN_SRC sh
+$ ls -lah cache/elasticsearch_appcds.jsa
+-r--r--r--  1 igor  staff    79M May 20 20:52 cache/elasticsearch_appcds.jsa
+#+END_SRC
+
+** Package it with the container
+
+We have the class cache, now we can package it with the container.
+
+
+Here is the dockerfile:
+#+BEGIN_SRC dockerfile :tangle target/Dockerfile-cds
+# Dockerfile-cds
+FROM ikupczynski/elasticsearch-oss:6.2.4-openjdk10
+
+COPY cache/ /app/cache
+#+END_SRC
+
+As you can see it is quite simple, it just copies the cache to the container.
+
+And the complimentary =Makefile= addition:
+#+BEGIN_SRC makefile :tangle target/Makefile
+CDS_IMAGE = ikupczynski/elasticsearch-oss:6.2.4-cds
+
+.PHONY: build-cds
+build-cds: dump-class-cache
+	@ docker build -f Dockerfile-cds -t $(CDS_IMAGE) .
+
+#+END_SRC
+
+I've build and pushed the image to dockerhub, so you can carry on from here with
+
+#+BEGIN_SRC sh
+docker pull ikupczynski/elasticsearch-oss:6.2.4-cds
+#+END_SRC
+
+** Convenience targets to run elasticsearch
+
+Let's define some =make= targets to let us run elasticsearch both with and
+without CDS.
+
+#+BEGIN_SRC makefile :tangle target/Makefile
+RUN_NO_CDS = export ES_JAVA_OPTS="-Xshare:off" && \
+		docker run \
+			--rm --name run-no-cds \
+			-p 9200:9200 -p 9300:9300 \
+			-e "discovery.type=single-node" \
+			-v $(CWD)/cache:/app/cache \
+			--env ES_JAVA_OPTS \
+			-it 
+
+.PHONY: run-nocds
+run-nocds:
+	@ $(RUN_NO_CDS) $(CDS_IMAGE)
+
+# `time-nocds` given mostly for illustration, it is not too acurate
+.PHONY: time-nocds
+time-nocds:
+	@ $(RUN_NO_CDS) -d $(CDS_IMAGE)
+	@ echo "Timing the wait on elastic"
+	@ time bin/wait-on-elastic
+	@ docker rm -f run-no-cds
+
+RUN_CDS = export ES_JAVA_OPTS="-Xshare:on \
+			-XX:+UseAppCDS \
+			-XX:SharedClassListFile=/app/cache/elasticsearch_appcds.cls-thin \
+			-XX:+UnlockDiagnosticVMOptions \
+			-XX:SharedArchiveFile=/app/cache/elasticsearch_appcds.jsa" && \
+		docker run \
+			--rm --name run-cds \
+			-p 9200:9200 -p 9300:9300 \
+			-e "discovery.type=single-node" \
+			-v $(CWD)/cache:/app/cache \
+			--env ES_JAVA_OPTS \
+			-it
+
+.PHONY: run-cds
+run-cds:
+	@ $(RUN_CDS) $(CDS_IMAGE)
+
+# `time-cds` given mostly for illustration, it is not too acurate
+.PHONY: time-cds
+time-cds:
+	@ $(RUN_CDS) -d $(CDS_IMAGE)
+	@ echo "Timing the wait on elastic"
+	@ time bin/wait-on-elastic
+	@ docker rm -f run-cds
+#+END_SRC
+
+Now we can run elasticsearch with or without CDS:
+#+BEGIN_SRC sh
+make run-cds
+make run-nocds
+#+END_SRC

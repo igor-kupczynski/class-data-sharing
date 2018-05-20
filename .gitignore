@@ -1,3 +1,3 @@
 .DS_Store
-cache/*
-pkg/*
+target/cache/elasticsearch_appcds.*
+target/pkg/*.tar.gz

@@ -1,4 +1,6 @@
-We've hit a weird JDK error, when dumping the classes to cache. Stripping the list down to first 6218 classes is a workaround. Investigation pending.
+We've hit a weird JDK error, when dumping the classes to the cache file. Stripping the list down to first 6218 classes is a workaround.
+
+Investigation pending.
 
 ** Console output
 

@@ -79,8 +79,7 @@ build-cds: dump-class-cache
 RUN_NO_CDS = export ES_JAVA_OPTS="-Xshare:off \
 			-Xlog:class+load:file=/app/logs/classload-nocds.log " && \
 		docker run \
-			--rm --name run-no-cds \
-			-p 9200:9200 -p 9300:9300 \
+			--name run-no-cds \
 			-e "discovery.type=single-node" \
 			-v $(CWD)/cache:/app/cache \
 			-v $(CWD)/logs:/app/logs \
@@ -93,12 +92,12 @@ clean-nocds-logs:
 
 .PHONY: run-nocds
 run-nocds: clean-nocds-logs
-	@ $(RUN_NO_CDS) $(CDS_IMAGE)
+	@ $(RUN_NO_CDS) --rm $(CDS_IMAGE)
 
 # `time-nocds` given mostly for illustration, it is not too acurate
 .PHONY: time-nocds
 time-nocds:
-	@ $(RUN_NO_CDS) -d $(CDS_IMAGE)
+	@ $(RUN_NO_CDS) -p 9200:9200 -d $(CDS_IMAGE)
 	@ echo "Timing the wait on elastic"
 	@ time bin/wait-on-elastic
 	@ docker rm -f run-no-cds
@@ -110,8 +109,7 @@ RUN_CDS = export ES_JAVA_OPTS="-Xshare:on \
 			-XX:+UnlockDiagnosticVMOptions \
 			-XX:SharedArchiveFile=/app/cache/elasticsearch_appcds.jsa" && \
 		docker run \
-			--rm --name run-cds \
-			-p 9200:9200 -p 9300:9300 \
+			--name run-cds \
 			-e "discovery.type=single-node" \
 			-v $(CWD)/cache:/app/cache \
 			-v $(CWD)/logs:/app/logs \
@@ -124,12 +122,12 @@ clean-cds-logs:
 
 .PHONY: run-cds
 run-cds:
-	@ $(RUN_CDS) $(CDS_IMAGE)
+	@ $(RUN_CDS) --rm $(CDS_IMAGE)
 
 # `time-cds` given mostly for illustration, it is not too acurate
 .PHONY: time-cds
 time-cds:
-	@ $(RUN_CDS) -d $(CDS_IMAGE)
+	@ $(RUN_CDS) -p 9200:9200 -d $(CDS_IMAGE)
 	@ echo "Timing the wait on elastic"
 	@ time bin/wait-on-elastic
 	@ docker rm -f run-cds

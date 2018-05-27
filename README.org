@@ -272,7 +272,6 @@ without CDS.
 RUN_NO_CDS = export ES_JAVA_OPTS="-Xshare:off \
 			-Xlog:class+load:file=/app/logs/classload-nocds.log " && \
 		docker run \
-			--name run-no-cds \
 			-e "discovery.type=single-node" \
 			-v $(CWD)/cache:/app/cache \
 			-v $(CWD)/logs:/app/logs \
@@ -287,10 +286,10 @@ clean-nocds-logs:
 run-nocds: clean-nocds-logs
 	@ $(RUN_NO_CDS) --rm $(CDS_IMAGE)
 
-# `time-nocds` given mostly for illustration, it is not too acurate
+# `time-nocds` given mostly for illustration, it is not acurate
 .PHONY: time-nocds
 time-nocds:
-	@ $(RUN_NO_CDS) -p 9200:9200 -d $(CDS_IMAGE)
+	@ $(RUN_NO_CDS) -p 9200:9200 --name run-no-cds -d $(CDS_IMAGE)
 	@ echo "Timing the wait on elastic"
 	@ time bin/wait-on-elastic
 	@ docker rm -f run-no-cds
@@ -302,7 +301,6 @@ RUN_CDS = export ES_JAVA_OPTS="-Xshare:on \
 			-XX:+UnlockDiagnosticVMOptions \
 			-XX:SharedArchiveFile=/app/cache/elasticsearch_appcds.jsa" && \
 		docker run \
-			--name run-cds \
 			-e "discovery.type=single-node" \
 			-v $(CWD)/cache:/app/cache \
 			-v $(CWD)/logs:/app/logs \
@@ -317,10 +315,10 @@ clean-cds-logs:
 run-cds:
 	@ $(RUN_CDS) --rm $(CDS_IMAGE)
 
-# `time-cds` given mostly for illustration, it is not too acurate
+# `time-cds` given mostly for illustration, it is not acurate
 .PHONY: time-cds
 time-cds:
-	@ $(RUN_CDS) -p 9200:9200 -d $(CDS_IMAGE)
+	@ $(RUN_CDS) -p 9200:9200 --name run-cds -d $(CDS_IMAGE)
 	@ echo "Timing the wait on elastic"
 	@ time bin/wait-on-elastic
 	@ docker rm -f run-cds
@@ -336,55 +334,84 @@ make run-nocds
 
 ** Let's see how the classes are loaded
 
-We can run the no-cds version in a terminal
-#+BEGIN_SRC sh
-$ make run-nocds
-OpenJDK 64-Bit Server VM warning: Option UseConcMarkSweepGC was deprecated in version 9.0 and will likely be removed in a future release.
-[2018-05-20T19:42:15,832][INFO ][o.e.n.Node               ] [] initializing ...
-[2018-05-20T19:42:15,988][INFO ][o.e.e.NodeEnvironment    ] [aMmFJlH] using [1] data paths, mounts [[/ (overlay)]], net usable_space [48.8gb], net total_space [62.7gb], types [overlay]
-[2018-05-20T19:42:15,989][INFO ][o.e.e.NodeEnvironment    ] [aMmFJlH] heap size [1007.3mb], compressed ordinary object pointers [true]
-[2018-05-20T19:42:15,994][INFO ][o.e.n.Node               ] node name [aMmFJlH] derived from node ID [aMmFJlHFR3a6CbSRsnC6JA]; set [node.name] to override
-[2018-05-20T19:42:15,995][INFO ][o.e.n.Node               ] version[6.2.4], pid[1], build[ccec39f/2018-04-12T20:37:28.497551Z], OS[Linux/4.9.87-linuxkit-aufs/amd64], JVM[Oracle Corporation/OpenJDK 64-Bit Server VM/10.0.1/10.0.1+10]
-[2018-05-20T19:42:15,995][INFO ][o.e.n.Node               ] JVM arguments [-Xms1g, -Xmx1g, -XX:+UseConcMarkSweepGC, -XX:CMSInitiatingOccupancyFraction=75, -XX:+UseCMSInitiatingOccupancyOnly, -XX:+AlwaysPreTouch, -Xss1m, -Djava.awt.headless=true, -Dfile.encoding=UTF-8, -Djna.nosys=true, -XX:-OmitStackTraceInFastThrow, -Dio.netty.noUnsafe=true, -Dio.netty.noKeySetOptimization=true, -Dio.netty.recycler.maxCapacityPerThread=0, -Dlog4j.shutdownHookEnabled=false, -Dlog4j2.disable.jmx=true, -Djava.io.tmpdir=/tmp/elasticsearch.PXDU79XV, -XX:+HeapDumpOnOutOfMemoryError, -Xlog:gc*,gc+age=trace,safepoint:file=logs/gc.log:utctime,pid,tags:filecount=32,filesize=64m, -Djava.locale.providers=COMPAT, -Des.cgroups.hierarchy.override=/, -Xshare:off, -Xlog:class+load:file=/app/logs/classload-nocds.log, -Des.path.home=/usr/share/elasticsearch, -Des.path.conf=/usr/share/elasticsearch/config]
-# (...)
-# ^^^ Note JVM arguments `-Xshare:off, -Xlog:class+load:file=/app/logs/classload-nocds.log`
-#+END_SRC
-
-And then inspect the logs
-#+BEGIN_SRC sh
-$ grep " org.elasticsearch.bootstrap.Bootstrap " logs/classload-nocds.log* | grep Bootstrap
-logs/classload-nocds.log:[1.306s][info][class,load] org.elasticsearch.bootstrap.Bootstrap source: file:/usr/share/elasticsearch/lib/elasticsearch-6.2.4.jar
-#+END_SRC
-
-As we can see, the main class was loaded from the jar, after =1.306s=.
-
-Let's compare that with the *cds* version:
-#+BEGIN_SRC sh
-$ make run-cds
-OpenJDK 64-Bit Server VM warning: Option UseConcMarkSweepGC was deprecated in version 9.0 and will likely be removed in a future release.
-[2018-05-20T19:50:18,712][INFO ][o.e.n.Node               ] [] initializing ...
-[2018-05-20T19:50:18,810][INFO ][o.e.e.NodeEnvironment    ] [0L2yDFU] using [1] data paths, mounts [[/ (overlay)]], net usable_space [48.8gb], net total_space [62.7gb], types [overlay]
-[2018-05-20T19:50:18,811][INFO ][o.e.e.NodeEnvironment    ] [0L2yDFU] heap size [1007.3mb], compressed ordinary object pointers [true]
-[2018-05-20T19:50:18,813][INFO ][o.e.n.Node               ] node name [0L2yDFU] derived from node ID [0L2yDFU9SjmPEOw5xtIyGw]; set [node.name] to override
-[2018-05-20T19:50:18,814][INFO ][o.e.n.Node               ] version[6.2.4], pid[1], build[ccec39f/2018-04-12T20:37:28.497551Z], OS[Linux/4.9.87-linuxkit-aufs/amd64], JVM[Oracle Corporation/OpenJDK 64-Bit Server VM/10.0.1/10.0.1+10]
-[2018-05-20T19:50:18,815][INFO ][o.e.n.Node               ] JVM arguments [-Xms1g, -Xmx1g, -XX:+UseConcMarkSweepGC, -XX:CMSInitiatingOccupancyFraction=75, -XX:+UseCMSInitiatingOccupancyOnly, -XX:+AlwaysPreTouch, -Xss1m, -Djava.awt.headless=true, -Dfile.encoding=UTF-8, -Djna.nosys=true, -XX:-OmitStackTraceInFastThrow, -Dio.netty.noUnsafe=true, -Dio.netty.noKeySetOptimization=true, -Dio.netty.recycler.maxCapacityPerThread=0, -Dlog4j.shutdownHookEnabled=false, -Dlog4j2.disable.jmx=true, -Djava.io.tmpdir=/tmp/elasticsearch.clFtu2fQ, -XX:+HeapDumpOnOutOfMemoryError, -Xlog:gc*,gc+age=trace,safepoint:file=logs/gc.log:utctime,pid,tags:filecount=32,filesize=64m, -Djava.locale.providers=COMPAT, -Des.cgroups.hierarchy.override=/, -Xshare:on, -Xlog:class+load:file=/app/logs/classload-cds.log, -XX:+UseAppCDS, -XX:SharedClassListFile=/app/cache/elasticsearch_appcds.cls-thin, -XX:+UnlockDiagnosticVMOptions, -XX:SharedArchiveFile=/app/cache/elasticsearch_appcds.jsa, -Des.path.home=/usr/share/elasticsearch, -Des.path.conf=/usr/share/elasticsearch/config]
-# (...)
-# ^^^ Note JVM arguments `-Xshare:on, -Xlog:class+load:file=/app/logs/classload-cds.log, -XX:+UseAppCDS, -XX:SharedClassListFile=/app/cache/elasticsearch_appcds.cls-thin, -XX:+UnlockDiagnosticVMOptions, -XX:SharedArchiveFile=/app/cache/elasticsearch_appcds.jsa`
-#+END_SRC
-
+We can run both versions in the terminal, and then inspect logs:
 
 #+BEGIN_SRC sh
-$ grep " org.elasticsearch.bootstrap.Bootstrap " logs/classload-cds.log* | grep Bootstrap
-logs/classload-cds.log:[1.308s][info][class,load] org.elasticsearch.bootstrap.Bootstrap source: shared objects file
+$ make time-nocds
+# ...
 
-$ grep -c "shared objects file" logs/classload-cds.log
-6201
+$ make time-cds
+# ...
+
+
+$ grep 'org.elasticsearch.bootstrap.Bootstrap ' logs/*
+logs/classload-cds.log:[1.370s][info][class,load] org.elasticsearch.bootstrap.Bootstrap source: shared objects file
+logs/classload-nocds.log:[2.696s][info][class,load] org.elasticsearch.bootstrap.Bootstrap source: file:/usr/share/elasticsearch/lib/elasticsearch-6.2.4.jar
 #+END_SRC
 
-This time our class was loaded from the =shared objects file=, which means the
-cache. In fact =6201= classes were loaded from the cache, which means almost all
-from our =6218= classes on the list.
+As we can see, with the class data sharing, we've loaded the main class from
+=shared objects file=, which means the class cache we've created. In case of
+=nocds= the file is loaded from the jar. All as expected.
+
+We also see that the =cds= version lodeaded the main class over a second faster,
+and this number was fairly consistent accros various runs I did to write this
+post. I woudn't trust it, as it wasn't a rigourus benchmark --- I run on a dev
+laptop with many variables to account for. If you are in a business of
+(re-)starting java apps often, generate a class cache and try to compare startup
+times for you use case / app.
+
+Let's also see how many classes where actually loaded from cache.
+#+BEGIN_SRC sh
+$ grep -c 'shared objects file' logs/classload-cds.log
+2028
+#+END_SRC
 
 ** Memory usage
 
-** Performance
+Let's start with no class data sharing:
+#+BEGIN_SRC sh
+$ make run-nocds  # 4 times, different terminals
+# (...)
+
+
+$ docker stats
+CONTAINER ID        NAME                CPU %               MEM USAGE / LIMIT     MEM %               NET I/O             BLOCK I/O           PIDS
+371268a8263b        vigilant_neumann    0.91%               1.168GiB / 7.787GiB   15.00%              858B / 0B           0B / 254kB          28
+5137554b5e86        pensive_kepler      0.16%               1.164GiB / 7.787GiB   14.95%              858B / 0B           0B / 254kB          28
+9fd0a493d7a2        vibrant_albattani   0.18%               1.174GiB / 7.787GiB   15.08%              858B / 0B           0B / 254kB          28
+5cfb3f1d7a8e        vibrant_shtern      0.20%               1.17GiB / 7.787GiB    15.03%              1.04kB / 0B         8.19kB / 254kB      28
+#+END_SRC
+
+Reported mem usage: =1.164=, =1.168=, =1.170=, =1.174 [GiB]=
+
+
+And with class data sharing
+#+BEGIN_SRC sh
+$ make run-cds  # 4 times
+# (...)
+
+$ docker stats
+CONTAINER ID        NAME                       CPU %               MEM USAGE / LIMIT     MEM %               NET I/O             BLOCK I/O           PIDS
+4e29db4f3dca        inspiring_volhard          0.97%               1.154GiB / 7.787GiB   14.82%              718B / 0B           8.19kB / 254kB      28
+2841355336be        awesome_shockley           0.31%               1.153GiB / 7.787GiB   14.81%              788B / 0B           0B / 254kB          28
+1fe95a004665        naughty_goldberg           0.39%               1.171GiB / 7.787GiB   15.04%              788B / 0B           0B / 254kB          28
+513955f2d550        compassionate_montalcini   0.27%               1.152GiB / 7.787GiB   14.80%              968B / 0B           0B / 254kB          28
+#+END_SRC
+
+Reported mem usage: =1.152=, =1.153=, =1.154=, =1.171 [GiB]=
+
+Again, not really a benchmark, but we can see a =5--20 MiB= improvement.
+
+* Conclusions
+
+Class data sharing allows for shorter startup times and lower memory usage (if
+running multiple instances). Volker Simonis reports [[https://simonis.github.io/GeeCON2018/CDS/cds.xhtml#/5/2][30% statup time improvement
+for JRuby]]. If you need to start your app often (e.g. scripts) or run multiple
+copies of it (orchestration, serverless), and you are OpenJDK 10 compatible (for
+application class sharing) give it a try.
+
+
+** Ideas for future post:
+
+- Why does JVM complain about full 7k list of classes for elasticsearch?
+- What are the gains with scala, which is known to generate a lot of classes.

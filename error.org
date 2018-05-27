@@ -994,3 +994,62 @@ vm_info: OpenJDK 64-Bit Server VM (10.0.1+10) for linux-amd64 JRE (10.0.1+10), b
 
 END.
 #+END_SRC
+
+** The same on CentOS on AWS
+
+- I've notived that 6k triggers the error (which on macos was fine), trimming
+  the class list to 5k helps.
+
+- Also switching the order doesn't help, so it is not about a specific class,
+  but about the size of the list.
+  
+- Naturally, this makes me suspect OpenJDK hitting some limits.
+
+- There is some automation in the process of selecting the memory size for the JVM
+
+  + https://bugs.openjdk.java.net/browse/JDK-8072061
+
+  + https://bugs.openjdk.java.net/browse/JDK-8182728 
+
+
+- I've did a couple of experiments with various number of clases and it seems
+  the autosizing works corretly. I suspect the initial sizing is to blame then.
+
+  #+BEGIN_SRC text
+  --- orig 6k
+mc  space:     18184 [  0.0% of total] out of     20480 bytes [ 88.8% used] at 0x0000000800000000
+rw  space:  18630320 [ 22.6% of total] out of  18632704 bytes [100.0% used] at 0x0000000800005000
+ro  space:  31856600 [ 38.6% of total] out of  31858688 bytes [100.0% used] at 0x00000008011ca000
+md  space:      6160 [  0.0% of total] out of      8192 bytes [ 75.2% used] at 0x000000080302c000
+od  space:  31914104 [ 38.7% of total] out of  31916032 bytes [100.0% used] at 0x000000080302e000
+total    :  82425368 [100.0% of total] out of  82436096 bytes [100.0% used]
+
+
+
+
+--- 5k
+mc  space:     15304 [  0.0% of total] out of     16384 bytes [ 93.4% used] at 0x0000000800000000
+rw  space:  14955184 [ 22.7% of total] out of  14958592 bytes [100.0% used] at 0x0000000800004000
+ro  space:  25879248 [ 39.4% of total] out of  25882624 bytes [100.0% used] at 0x0000000800e48000
+md  space:      6160 [  0.0% of total] out of      8192 bytes [ 75.2% used] at 0x00000008026f7000
+od  space:  24884024 [ 37.8% of total] out of  24887296 bytes [100.0% used] at 0x00000008026f9000
+total    :  65739920 [100.0% of total] out of  65753088 bytes [100.0% used]
+
+
+--- 2k
+mc  space:     10552 [  0.0% of total] out of     12288 bytes [ 85.9% used] at 0x0000000800000000
+rw  space:   6153440 [ 23.1% of total] out of   6156288 bytes [100.0% used] at 0x0000000800003000
+ro  space:  10784088 [ 40.5% of total] out of  10784768 bytes [100.0% used] at 0x00000008005e2000
+md  space:      6160 [  0.0% of total] out of      8192 bytes [ 75.2% used] at 0x000000080102b000
+od  space:   9686344 [ 36.3% of total] out of   9687040 bytes [100.0% used] at 0x000000080102d000
+total    :  26640584 [100.0% of total] out of  26648576 bytes [100.0% used]
+  #+END_SRC
+
+As this stays constant:
+
+#+BEGIN_SRC text
+Allocated temporary class space: 1073741824 bytes at 0x00000008c0000000
+Allocated shared space: 3221225472 bytes at 0x0000000800000000
+#+END_SRC
+
+And this is my suspect ^^^.

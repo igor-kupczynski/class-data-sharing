@@ -1,15 +1,30 @@
 #+TITLE: README
 
-*Work in progress*
+This post describes how to enable Class Data Sharing (CDS) for a java app and
+what are the benefits of doing so.
 
-This post investigates the gains from enabling Class Data Sharing (CDS) on an
-elasticsearch container.
+I've recently seen a talk about CDS by [[https://simonis.github.io/GeeCON2018/CDS/cds.xhtml#/][Volker Simonis]] which was the inspiration
+to write this blogpost.
 
 * What is Class Data Sharing?
 
+Class Data Sharing is a JVM feature, which allows multiple JVMs to share loaded
+classes (and some other things) via shared memory.
 
-** What can we gain?
+A basic CDS was available with [[https://docs.oracle.com/javase/1.5.0/docs/guide/vm/class-data-sharing.html][Sun JVM since java 1.5]]. It was limited to system
+classes and serial GC only, so not widely applicable. In Oracle JDK 9 this
+finally became useful, with support of other GC algorithms and application
+classes. It was a commercial feature until JDK 10, where it [[http://openjdk.java.net/jeps/310][became opensource]].
 
+CDS creates a memory mapped file, caching the internal representation of
+specified classes. This file (and its memory) can therefore be shared between
+JVMs, plus the loading of classes from the internal representation is faster
+than from a regular jar file.
+
+It is worth noting that IBM Open J9 had a [[https://www.ibm.com/support/knowledgecenter/SSYKE2_8.0.0/com.ibm.java.vm.80.doc/docs/shrc.html][similar feature]] for a long time.
+
+In this blog post we'll investigate how to prepare such a CDS archive and look
+at potential benefits. We'll use elasticsearch docker image to conduct the experiment.
 
 * Prepare CDS
 
@@ -68,8 +83,9 @@ make build-jdk10
 
 ** Create a list of classes used by Elasticsearch
 
-We're going to run start elastics and let it log all the classes it uses to
-a file =-XX:DumpLoadedClassList=/app/cache/elasticsearch_appcds=. We need to
+We're going to start elastics, make it respond to a simple request and let it
+log all the classes it uses to a file
+=-XX:DumpLoadedClassList=/app/cache/elasticsearch_appcds=. We need to
 specifically enable the support for application classes with =-XX:+UseAppCDS=,
 otherwise will limit ourselves to jdk classes only.
 
@@ -138,14 +154,15 @@ org/elasticsearch/common/bytes/PagedBytesReference$1
 
 Note that the list is generate while your app is running, so if you load any
 classes manually later on, you should exercise this codepath. In our case we
-just wait until elasticsearch can respond to a simple rest request.
+just wait until elasticsearch can respond to a simple rest request. This is not
+perfect, but good enough for our experiment.
 
 *** JVM error
 
 Normally, the next step would be to take the =elasticsearch_appcds= class list
 and use it to populate the cache file, however I've hit some limit (either a JVM
 bug, or more likely, some memory limits or docker-jvm interplay) and I needed to
-trim down the class list by 1/7 to around 6k. See [[file://error.org][error.org]] for more details.
+trim down the class list by 1/7 to around 6k. See [[https://github.com/igor-kupczynski/class-data-sharing/blob/master/error.org][error.org]] for more details.
 
 I leave the root cause investigation for some later time. Now, let's just trim
 the class list.
@@ -353,9 +370,9 @@ As we can see, with the class data sharing, we've loaded the main class from
 =shared objects file=, which means the class cache we've created. In case of
 =nocds= the file is loaded from the jar. All as expected.
 
-We also see that the =cds= version lodeaded the main class over a second faster,
-and this number was fairly consistent accros various runs I did to write this
-post. I woudn't trust it, as it wasn't a rigourus benchmark --- I run on a dev
+We also see that the =cds= version loaded the main class over a second faster,
+and this number was fairly consistent across various runs I did to write this
+post. I wouldn't trust it, as it wasn't a rigorous benchmark --- I run on a dev
 laptop with many variables to account for. If you are in a business of
 (re-)starting java apps often, generate a class cache and try to compare startup
 times for you use case / app.
@@ -402,6 +419,48 @@ Reported mem usage: =1.152=, =1.153=, =1.154=, =1.171 [GiB]=
 
 Again, not really a benchmark, but we can see a =5--20 MiB= improvement.
 
+* Recap
+
+To create a class data archive, we need to:
+
+1. Run the application, while dumping the class list
+
+   #+BEGIN_SRC sh
+     -XX:+UseAppCDS -XX:DumpLoadedClassList=/class-list.cls
+   #+END_SRC
+
+
+2. Generate the archive file from this list
+
+   #+BEGIN_SRC sh
+      -Xshare:dump \
+			-XX:+UseAppCDS \
+			-XX:SharedClassListFile=/class-list.cls \
+			-XX:+UnlockDiagnosticVMOptions \
+			-XX:SharedArchiveFile=/archive.jsa   
+   #+END_SRC
+   
+3. Run the app with the archive
+
+   #+BEGIN_SRC sh
+      -Xshare:on \
+			-XX:+UseAppCDS \
+			-XX:SharedClassListFile=/class-list.cls \
+			-XX:+UnlockDiagnosticVMOptions \
+			-XX:SharedArchiveFile=/archive.jsa 
+   #+END_SRC
+   
+
+The internal representation may be architecture dependent, so should be
+generated on an env close to the target.
+
+As a result of that, few dozen megabytes worth of java classes can be shared
+across JVMs; plus we'll shave a few seconds from the startup time. In case of
+elasticsearch, these are not huge savings. On the other hand, if you run
+multiple copies of your app, or this is a script, where lower startup time
+improves the UX greatly, you should consider using Class Data Sharing.
+Coincidentally, if you run a serverless platform, both of these conditions apply.
+
 * Conclusions
 
 Class data sharing allows for shorter startup times and lower memory usage (if
@@ -411,7 +470,7 @@ copies of it (orchestration, serverless), and you are OpenJDK 10 compatible (for
 application class sharing) give it a try.
 
 
-** Ideas for future post:
+** Ideas for future posts:
 
 - Why does JVM complain about full 7k list of classes for elasticsearch?
 - What are the gains with scala, which is known to generate a lot of classes.
